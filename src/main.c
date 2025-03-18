@@ -11,12 +11,14 @@ int main()
 	ZFB_Entity player = { .id = 0, .width = 150, .height = 150, .physics = {{700, 500},{0, 0},{0, 0}, 1, 0} };
 	ZFB_Entity a = { .id = 10, .width = 250, .height = 250, .physics = {{1280, 0}, {0, 0}, {0, 0}, 1, 0} };
 	ZFB_Entity sunEntity = { .id = 20, .width = 200, .height = 200, .physics = {{640, 400},{0, 0},{0, 0}, 5, 0} };
+	ZFB_Entity ballEntity = { .id = 30, .width = 50, .height = 50, .physics = {{640, 400},{0, 0},{0, 0}, 5, 1} };
 	ZFB_Vector2 aForce = {0, 0};
 	ZFB_Vector2 sunForce = {0, 0};
 	ZFB_Vector2 playerForce = {0, 0};
+	ZFB_Vector2 ballForce = {0, 0};
 	float dt = 1;
 
-	//ZFB_Texture* bgtex = ZFB_LoadTexture("cringeculture.png");
+	ZFB_Texture* balltex = ZFB_LoadTexture("cringeculture.png");
 	ZFB_Texture* tex = ZFB_LoadTexture("pointer.png");
 	ZFB_Texture* spaceshiptex = ZFB_LoadTexture("spaceship.png");
 
@@ -25,6 +27,7 @@ int main()
 	ZFB_Rect rect = { a.physics.position.x, a.physics.position.y, a.width, a.height, tex };
 	ZFB_Rect sun = { sunEntity.physics.position.x, sunEntity.physics.position.y, sunEntity.width, sunEntity.height, NULL };
 	ZFB_Rect plr = { player.physics.position.x, player.physics.position.y, player.width, player.height, spaceshiptex };
+  ZFB_Rect ball = { ballEntity.physics.position.x, ballEntity.physics.position.y, ballEntity.width, ballEntity.height, balltex };
 
 	int quit = 0;
 	int pauseflag = -1;
@@ -58,6 +61,12 @@ int main()
 		{
 			sunForce.x = 1;
 		}
+
+    if (ballEntity.physics.position.x > 800-50)
+		{
+			ballForce.y = -1;
+		}
+
 		switch (ZFB_KeyPressed())
 		{
 			case 114:
@@ -108,8 +117,10 @@ int main()
 		}
 		update_physics(&a, dt);
 		update_physics(&sunEntity, dt);
+		update_physics(&ballEntity, dt);
 		update_physics(&player, dt);
 		apply_force(&a, aForce);
+		apply_force(&ballEntity, ballForce);
 		apply_force(&player, playerForce);
 		apply_force(&sunEntity, sunForce);
 
@@ -119,11 +130,14 @@ int main()
 		sun.y = sunEntity.physics.position.y;
 		plr.x = player.physics.position.x;
 		plr.y = player.physics.position.y;
+		ball.x = ballEntity.physics.position.x;
+		ball.y = ballEntity.physics.position.y;
 
 		ZFB_DrawBG(dev, &ZFB_Red, NULL);
 		ZFB_DrawRect(dev, sun, &ZFB_Yellow);
 		ZFB_DrawRect(dev, rect, NULL);
-		ZFB_DrawRect(dev, plr, &ZFB_White);
+		ZFB_DrawRect(dev, plr, NULL);
+		ZFB_DrawRect(dev, ball, NULL);
 		
 		if (check_collision(a, sunEntity))
 		{
@@ -140,7 +154,7 @@ int main()
 		ZFB_DInfo();
 		printf("\e[A");
 
-		usleep(33 * 1000); //60fps
+		usleep(33 * 1000); //30fps
 	}
 	system("clear");
 	printf("Simulation Done\n\r");
