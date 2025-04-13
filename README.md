@@ -1,4 +1,3 @@
-# ZFB Test
 This Repository is used to show various features of ZFB to just show some basic simulation.
 
 ## Requirments
