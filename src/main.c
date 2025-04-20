@@ -4,14 +4,14 @@
 ZFB_Device dev = { "/dev/fb0" };
 
 ZFB_Entity player = {};
-ZFB_Color* color = { 255, 0, 0 };
+ZFB_Color bgColor = { 255, 0, 0 };
 
 int main()
 {
 	ZFB_InitFB(&dev);
-	while (true)
+	while (1)
 	{
-		ZFB_DrawBG(dev, color, NULL);
+		ZFB_DrawBG(dev, &bgColor, NULL);
 	}
 	return 0;
 }
