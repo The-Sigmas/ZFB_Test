@@ -37,10 +37,10 @@ int main()
 			.velocity = { 0, 0 },
 			.acceleration = { 0, 0 },
 			.mass = 5,
-			.afffected_by_gravity = 1, // TODO: Change to .gravity
+			.affected_by_gravity = 1, // TODO: Change to .gravity
 		},
-		.width = 50;
-		.height = 50;
+		.width = 50,
+		.height = 50,
 	};	
 
 	// Set terminal to raw mode
@@ -54,8 +54,8 @@ int main()
 		// Rectangles
 		ZFB_Rect player =
 		{
-			.x = playerEntity.position.x,
-			.y = playerEntity.position.y,
+			.x = playerEntity.physics.position.x,
+			.y = playerEntity.physics.position.y,
 			.w = playerEntity.width,
 			.h = playerEntity.height,
 			.texture = playerTex // NOTE: Can be NULL aswell
@@ -65,7 +65,7 @@ int main()
 		ZFB_DrawRect(dev, player, NULL);
 
 		// Draw the Background
-		ZFB_DrawBG(dev, &bgColor, &bgTex);
+		ZFB_DrawBG(dev, &bgColor, bgTex);
 	}
 	ZFB_ExitRawMode();
 	ZFB_FreeTextures();
