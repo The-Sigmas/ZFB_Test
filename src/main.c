@@ -65,14 +65,14 @@ int main()
 		{
 			case ZFB_EVENT_KEYDOWN:
 				{
-					ZFB_Print("%d", event->data.key.key_code);
+					printf("\r%d\n", event->data.key.key_code);
 				}
 		}
 
 		// Rectangles
 		ZFB_Rect player =
 		{
-			.position = playerEntity.position;
+			.position = playerEntity.physics.position,
 			.width = playerEntity.width,
 			.height = playerEntity.height,
 			.texture = playerTex // NOTE: Can be NULL aswell
