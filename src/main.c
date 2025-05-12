@@ -20,6 +20,10 @@ int main()
 	// Initialize the Device
 	ZFB_InitFB(&dev);
 	
+	// Event
+	ZFB_Event* event = {};
+	ZFB_EventInit();
+
 	// Background
 	ZFB_Color bgColor = { 255, 0, 0 };
 
@@ -51,6 +55,20 @@ int main()
 		// CPU, MEM, PROCMEM
 		ZFB_DInfo();
 		
+		// Keyboard schenanigans
+		ZFB_ProcessKeyboard();
+
+		// Read Events
+		ZFB_PollEvent(event);
+
+		switch(event->type)
+		{
+			case ZFB_EVENT_KEYDOWN:
+				{
+					ZFB_Print("%d", event->data.key.key_code);
+				}
+		}
+
 		// Rectangles
 		ZFB_Rect player =
 		{
