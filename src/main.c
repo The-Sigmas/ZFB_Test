@@ -24,7 +24,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		.width = 1280,
 		.height = 720
 	};
+
+	ZFB_Event event = {};
+
 	ZFB_InitFB(&dev);
+	ZFB_EventInit();
 	ZFB_CreateWindow(&dev, hInstance, hPrevInstance, lpCmdLine, nShowCmd);
 
 	ZFB_Color bgColor = { 255, 0, 0 };
@@ -41,7 +45,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			.velocity = { 0, 0 },
 			.acceleration = { 0, 0 },
 			.mass = 5,
-			.gravity = true, // TODO: Change to .gravity
+			.gravity = false,
+			.rotation = 0,
 		},
 		.width = 50,
 		.height = 50,	
@@ -52,9 +57,29 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	{
 		while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 		{
-      TranslateMessage(&msg);
-    	DispatchMessage(&msg);
-    }
+      			TranslateMessage(&msg);
+    			DispatchMessage(&msg);
+    		}
+
+		ZFB_ProcessKeyboard();
+
+		ZFB_PollEvent(&event);
+
+		switch(event.type)
+		{
+			case ZFB_EVENT_KEYDOWN:
+				{
+					//printf("%d\n", event.data.key.key_code);
+					if(ZFB_IsKeyPressed(39))
+					{
+						ZFB_ApplyTorque(&playerEntity, 0.05);
+					}
+					if(ZFB_IsKeyPressed(37))
+					{
+						ZFB_ApplyTorque(&playerEntity, -0.05);
+					}
+				}
+		}
 
 		ZFB_DrawBG(dev, NULL, bgTex);
 
@@ -63,8 +88,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			.position = playerEntity.physics.position,
 			.width = playerEntity.width,
 			.height = playerEntity.height,
+			.rotation = playerEntity.physics.rotation,
 			.texture = playerTex // NOTE: Can be NULL aswell
 		};
+
+		ZFB_UpdatePhysics(&playerEntity, 1);
 
 		ZFB_DrawRect(dev, player, NULL);
 
@@ -72,6 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		Sleep(16);
 	}
 
+	ZFB_EventShutdown();
 	ZFB_FreeTextures();
 	return 0;
 }
