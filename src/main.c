@@ -35,6 +35,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	ZFB_Texture* bgTex = ZFB_LoadTexture("pointer.png");
 	ZFB_Texture* playerTex = ZFB_LoadTexture("spaceship.png");
+	ZFB_Texture* osakaTex = ZFB_LoadTexture("textureexample.png");
 
 	ZFB_Entity playerEntity =
 	{
@@ -50,8 +51,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		},
 		.width = 50,
 		.height = 50,	
-	};
+	}; ZFB_Rect player = {.texture = playerTex};
 
+	float rotValue = 0;
 	MSG msg = {};
 	while (msg.message != WM_QUIT)
 	{
@@ -60,6 +62,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
       			TranslateMessage(&msg);
     			DispatchMessage(&msg);
     		}
+
+		rotValue += 0.1;
 
 		ZFB_ProcessKeyboard();
 
@@ -83,18 +87,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		ZFB_DrawBG(dev, NULL, bgTex);
 
-		ZFB_Rect player =
-		{
-			.position = playerEntity.physics.position,
-			.width = playerEntity.width,
-			.height = playerEntity.height,
-			.rotation = playerEntity.physics.rotation,
-			.texture = playerTex // NOTE: Can be NULL aswell
-		};
+		ZFB_SyncEntity(&player, playerEntity);
 
 		ZFB_UpdatePhysics(&playerEntity, 1);
 
+		ZFB_Rect osaka =
+		{
+			.position = { 0, 0 },
+			.width = 200,
+			.height = 200,
+			.rotation = rotValue,
+			.texture = osakaTex
+		};
+
 		ZFB_DrawRect(dev, player, NULL);
+		ZFB_DrawRect(dev, osaka, NULL);
+		//ZFB_DrawRect(dev, osaka, &ZFB_Red);
 
 		ZFB_Present(dev);
 		Sleep(16);
