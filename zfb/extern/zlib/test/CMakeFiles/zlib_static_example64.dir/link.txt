@@ -1,1 +1,0 @@
-/usr/bin/cc -Wl,--dependency-file=CMakeFiles/zlib_static_example64.dir/link.d CMakeFiles/zlib_static_example64.dir/example.c.o -o /home/bombacat/git/ZFB_Test/build/bin/zlib_static_example64  /home/bombacat/git/ZFB_Test/build/lib/libz.a

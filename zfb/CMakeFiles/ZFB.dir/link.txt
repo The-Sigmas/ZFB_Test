@@ -1,2 +1,0 @@
-/usr/bin/ar qc /home/bombacat/git/ZFB_Test/build/lib/libZFB.a CMakeFiles/ZFB.dir/src/zfb.c.o src/engine/CMakeFiles/engine.dir/engine.c.o src/engine/CMakeFiles/engine.dir/event.c.o src/engine/CMakeFiles/engine.dir/key_input/linux.c.o src/renderer/CMakeFiles/renderer.dir/renderer.c.o src/renderer/CMakeFiles/renderer.dir/linux.c.o
-/usr/bin/ranlib /home/bombacat/git/ZFB_Test/build/lib/libZFB.a
