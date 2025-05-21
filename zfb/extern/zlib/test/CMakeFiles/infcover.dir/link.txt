@@ -1,0 +1,1 @@
+/usr/bin/cc -coverage -Wl,--dependency-file=CMakeFiles/infcover.dir/link.d CMakeFiles/infcover.dir/infcover.c.o -o /home/bombacat/git/ZFB_Test/build/bin/infcover  /home/bombacat/git/ZFB_Test/build/lib/libz.a

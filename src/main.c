@@ -1,4 +1,5 @@
 #include "ZFB.h"
+#include <math.h>
 
 /*
  * This examples shows you how to set up a simple
@@ -20,8 +21,10 @@ int main()
 	// Initialize the Device
 	ZFB_InitFB(&dev);
 	
+	ZFB_InitInput();
+
 	// Event
-	ZFB_Event* event = {};
+	ZFB_Event event = {};
 	ZFB_EventInit();
 
 	// Background
@@ -30,6 +33,7 @@ int main()
 	// Textures
 	ZFB_Texture* playerTex = ZFB_LoadTexture("spaceship.png");
 	ZFB_Texture* bgTex = ZFB_LoadTexture("pointer.png");
+	ZFB_Texture* testTex = ZFB_LoadTexture("textureexample.png");
 
 	// Entities
 	ZFB_Entity playerEntity =
@@ -38,51 +42,80 @@ int main()
 		.physics = // NOTE: you can also define physics seperately, ZFB_PhysicsBody playerPhysics = {...};
 		{
 			.position = { dev.width/2, dev.height/2 }, // ZFB_Vector2
-			.velocity = { 0, 0 },
-			.acceleration = { 0, 0 },
 			.mass = 5,
-			.gravity = true, // TODO: Change to .gravity
+			.gravity = false,
+			.rotation = 0,
 		},
 		.width = 50,
 		.height = 50,
 	};	
+	
+	// Rectangles
+	ZFB_Rect player = {};
 
 	// Set terminal to raw mode
 	ZFB_RawMode();
-	while (true)
+	bool quit = false;
+	float rotation = 0;
+	while (!quit)
 	{
 		// Print the Debug info
 		// CPU, MEM, PROCMEM
-		ZFB_DInfo();
+		//ZFB_DInfo();
+
+		rotation+=0.1;
 		
 		// Keyboard schenanigans
 		ZFB_ProcessKeyboard();
 
 		// Read Events
-		ZFB_PollEvent(event);
+		ZFB_PollEvent(&event);
 
-		switch(event->type)
+		switch(event.type)
 		{
 			case ZFB_EVENT_KEYDOWN:
 				{
-					printf("\r%d\n", event->data.key.key_code);
+					if(ZFB_IsKeyPressed(1))
+					{
+						quit = true;
+					}
+
+					if(ZFB_IsKeyPressed(106))
+					{
+						ZFB_ApplyTorque(&playerEntity, 0.05);
+					}
+					if(ZFB_IsKeyPressed(105))
+					{
+						ZFB_ApplyTorque(&playerEntity, -0.05);
+					}
+					break;
+				}
+			case ZFB_EVENT_KEYUP:
+				{
+					break;	
 				}
 		}
 
 		// Rectangles
-		ZFB_Rect player =
+		ZFB_SyncEntity(&player, &playerEntity);
+		
+		ZFB_Rect test =
 		{
-			.position = playerEntity.physics.position,
-			.width = playerEntity.width,
-			.height = playerEntity.height,
-			.texture = playerTex // NOTE: Can be NULL aswell
+			.position = { dev.width/2, dev.height/2 },
+			.width = 250,
+			.height = 250,
+			.rotation = rotation,
+			.texture = testTex
 		};
 
-		// Draw the Rects
-		ZFB_DrawRect(dev, player, NULL);
+		ZFB_UpdatePhysics(&playerEntity, 1);
 
 		// Draw the Background
 		ZFB_DrawBG(dev, &bgColor, bgTex);
+		
+		// Draw the Rects
+		ZFB_DrawRect(dev, player, NULL);
+		ZFB_DrawRect(dev, test, NULL);
 	}
 	ZFB_ExitRawMode();
 	ZFB_FreeTextures();

@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,--dependency-file=CMakeFiles/minigzip.dir/link.d CMakeFiles/minigzip.dir/minigzip.c.o -o /home/bombacat/git/ZFB_Test/build/bin/minigzip  -Wl,-rpath,/home/bombacat/git/ZFB_Test/build/lib /home/bombacat/git/ZFB_Test/build/lib/libz.so.1.4.1.1

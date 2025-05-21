@@ -1,12 +1,10 @@
-cmake_minimum_required(VERSION 3.10)
-project(ZFB_Test)
+cmake_minimum_required(VERSION 3.13)
+project(ZFB_Test C)
 
-set(ZFB_DIR ~/ZFB)
-
-include_directories(${ZFB_DIR}/src/headers)
-
-link_directories(${ZFB_DIR}/build/lib)
+set(ZFB_DIR /home/bombacat/git/ZFB)
 
 add_executable(zfbTest src/main.c)
 
-target_link_libraries(zfbTest ZFB png)
+target_include_directories(zfbTest PRIVATE ${ZFB_DIR}/src/headers/)
+
+target_link_libraries(zfbTest PRIVATE ${ZFB_DIR}/build/lib/libZFB_C.a m)
