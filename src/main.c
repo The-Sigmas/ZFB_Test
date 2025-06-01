@@ -113,12 +113,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 						{
 							.physics =
 							{
-								.position = playerEntity.physics.position,
+								.position = (ZFB_Vector2)
+								{
+									playerEntity.physics.position.x+(playerEntity.width/2)-(5/2),
+									playerEntity.physics.position.y+(playerEntity.height/2)-(10/2)
+								},
 								.mass = 1,
 								.gravity = false,
 								.rotation = playerEntity.physics.rotation,
 							},
-							.width = 10,
+							.width = 5,
 							.height = 10,
 						};
 						bullets = realloc(bullets, sizeof(ZFB_Entity) * (bulletCount + 1));
