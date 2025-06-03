@@ -1,5 +1,6 @@
 #include "ZFB.h"
 #include <math.h>
+#include <unistd.h>
 
 /*
  * This examples shows you how to set up a simple
@@ -42,16 +43,29 @@ int main()
 		.physics = // NOTE: you can also define physics seperately, ZFB_PhysicsBody playerPhysics = {...};
 		{
 			.position = { dev.width/2, dev.height/2 }, // ZFB_Vector2
-			.mass = 5,
+			.mass = 3,
 			.gravity = false,
 			.rotation = 0,
 		},
 		.width = 50,
 		.height = 50,
-	};	
+	};
+	ZFB_Entity testEntity =
+	{
+		.physics =
+		{
+			.position = { dev.width/2, dev.height/2 },
+			.mass = 1,
+			.gravity = true,
+			.rotation = 0,
+		},
+		.width = 200,
+		.height = 200,
+	};
 	
 	// Rectangles
-	ZFB_Rect player = {};
+	ZFB_Rect player = {.texture = playerTex};
+	ZFB_Rect test = {.texture = testTex};
 
 	// Set terminal to raw mode
 	ZFB_RawMode();
@@ -61,7 +75,7 @@ int main()
 	{
 		// Print the Debug info
 		// CPU, MEM, PROCMEM
-		//ZFB_DInfo();
+		// ZFB_DInfo();
 
 		rotation+=0.1;
 		
@@ -71,44 +85,35 @@ int main()
 		// Read Events
 		ZFB_PollEvent(&event);
 
-		switch(event.type)
+		if(ZFB_IsKeyPressed(KEY_ESC))
 		{
-			case ZFB_EVENT_KEYDOWN:
-				{
-					if(ZFB_IsKeyPressed(1))
-					{
-						quit = true;
-					}
-
-					if(ZFB_IsKeyPressed(106))
-					{
-						ZFB_ApplyTorque(&playerEntity, 0.05);
-					}
-					if(ZFB_IsKeyPressed(105))
-					{
-						ZFB_ApplyTorque(&playerEntity, -0.05);
-					}
-					break;
-				}
-			case ZFB_EVENT_KEYUP:
-				{
-					break;	
-				}
+			quit = true;
+		}
+		if(ZFB_IsKeyPressed(KEY_RIGHT))
+		{
+			ZFB_ApplyTorque(&playerEntity, 0.02);
+		}
+		if(ZFB_IsKeyPressed(KEY_LEFT))
+		{
+			ZFB_ApplyTorque(&playerEntity, -0.02);
+		}
+		if(ZFB_IsKeyPressed(KEY_UP))
+		{
+			ZFB_ApplyForceLocal(&playerEntity, (ZFB_Vector2){0, -0.5});
+		}
+		if(ZFB_IsKeyPressed(KEY_DOWN))
+		{
+			ZFB_ApplyForceLocal(&playerEntity, (ZFB_Vector2){0, 0.5});
 		}
 
+		testEntity.physics.rotation = rotation;
+
 		// Rectangles
-		ZFB_SyncEntity(&player, &playerEntity);
-		
-		ZFB_Rect test =
-		{
-			.position = { dev.width/2, dev.height/2 },
-			.width = 250,
-			.height = 250,
-			.rotation = rotation,
-			.texture = testTex
-		};
+		ZFB_SyncEntity(&player, playerEntity);
+		ZFB_SyncEntity(&test, testEntity);
 
 		ZFB_UpdatePhysics(&playerEntity, 1);
+		ZFB_UpdatePhysics(&testEntity, 1);
 
 		// Draw the Background
 		ZFB_DrawBG(dev, &bgColor, bgTex);
@@ -116,6 +121,8 @@ int main()
 		// Draw the Rects
 		ZFB_DrawRect(dev, player, NULL);
 		ZFB_DrawRect(dev, test, NULL);
+
+		usleep(16000);
 	}
 	ZFB_ExitRawMode();
 	ZFB_FreeTextures();
